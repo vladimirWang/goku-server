@@ -1,0 +1,25 @@
+@host=http://localhost:3000
+@modifiedBy = $processEnv.username
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInVzZXJuYW1lIjoiam9obiIsImlhdCI6MTcxNjg4MjA1N30.1ZI4WE_4u4c-XjokF3iJk0Iwl5LL4ffFzYrZDQAGDQI
+### /
+GET {{host}}
+
+### /aaa
+GET {{host}}/aaa
+
+### /aaa/bbb
+GET {{host}}/aaa/bbb
+
+### /auth/profile
+GET {{host}}/auth/profile
+Authorization: Bearer {{token}}
+
+### /auth/login
+# @name login
+POST {{host}}/auth/login
+Content-Type: application/json
+
+{
+    "username": "john",
+    "password": "changeme"
+}
