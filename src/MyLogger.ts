@@ -2,6 +2,7 @@ import { LoggerService, LogLevel } from '@nestjs/common';
 import * as chalk from 'chalk';
 import * as dayjs from 'dayjs';
 import { createLogger, format, Logger, transports } from 'winston';
+import 'winston-daily-rotate-file';
 
 function getTimeStr(fmt = 'YYYY-MM-DD HH:mm:ss') {
   return dayjs(Date.now()).format(fmt);
@@ -24,10 +25,17 @@ export class MyLogger implements LoggerService {
       ),
       transports: [
         new transports.Console(),
-        new transports.File({
+        // new transports.File({
+        //   dirname: 'log',
+        //   filename: 'test.log',
+        //   maxsize: 1024,
+        // }),
+        new transports.DailyRotateFile({
+          level: 'info',
           dirname: 'log',
-          filename: 'test.log',
-          maxsize: 1024,
+          filename: 'test-%DATE%.log',
+          datePattern: 'YYYY-MM-DD HH:mm',
+          maxSize: '5k',
         }),
       ],
     });
