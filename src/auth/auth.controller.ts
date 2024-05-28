@@ -6,7 +6,7 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { User } from 'src/user/user.service';
+import { User } from '../user/entities/user.entity';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
 

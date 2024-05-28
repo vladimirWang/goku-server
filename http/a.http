@@ -23,3 +23,23 @@ Content-Type: application/json
     "username": "john",
     "password": "changeme"
 }
+
+### 用户注册
+# @name register
+POST {{host}}/user
+Content-Type: application/json
+
+{
+    "username": "jack",
+    "password": "changeme"
+}
+
+### 用户登录
+# @name login
+POST {{host}}/user/login
+Content-Type: application/json
+
+{
+    "username": "jack",
+    "password": "changeme"
+}
