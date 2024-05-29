@@ -1,3 +1,5 @@
+use galary2;
+
 -- 加列password， 非空
 ALTER TABLE user ADD column `password` varchar(50) not null;
 

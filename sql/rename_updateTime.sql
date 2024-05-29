@@ -1,0 +1,4 @@
+use galary2;
+
+ALTER TABLE `user` CHANGE updateTime updateTime datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6);
+ALTER TABLE `user` CHANGE createTime createTime datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6);
