@@ -1,4 +1,4 @@
-import { HttpException, Injectable, Logger } from '@nestjs/common';
+import { HttpException, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository, InjectEntityManager } from '@nestjs/typeorm';
 import { Repository, EntityManager } from 'typeorm';
 import * as crypto from 'crypto';
@@ -6,19 +6,7 @@ import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { RegisterUserDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-
-// const users: User[] = [
-//   {
-//     id: 2,
-//     username: 'maria',
-//     password: 'guess',
-//   },
-//   {
-//     id: 1,
-//     username: 'john',
-//     password: 'changeme',
-//   },
-// ];
+import { WINSTON_LOGGER_TOKEN } from 'src/winston/wiston.module';
 
 function md5(str) {
   const hash = crypto.createHash('md5');
@@ -28,6 +16,7 @@ function md5(str) {
 
 @Injectable()
 export class UserService {
+  constructor(@Inject(WINSTON_LOGGER_TOKEN) private loggerToken: any) {}
   private logger = new Logger();
 
   @InjectEntityManager()

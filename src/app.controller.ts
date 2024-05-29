@@ -1,9 +1,13 @@
-import { Controller, Get, Logger } from '@nestjs/common';
+import { Controller, Get, Inject, Logger } from '@nestjs/common';
 import { AppService } from './app.service';
+import { WINSTON_LOGGER_TOKEN } from './winston/wiston.module';
 
 @Controller()
 export class AppController {
-  private logger = new Logger();
+  // private logger = new Logger();
+  @Inject(WINSTON_LOGGER_TOKEN)
+  private logger;
+
   constructor(private readonly appService: AppService) {}
 
   @Get()
