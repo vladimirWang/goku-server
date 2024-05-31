@@ -1,4 +1,13 @@
-import { Body, Controller, Inject, Post, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Inject,
+  Post,
+  Res,
+  UseGuards,
+  Get,
+  Request,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 import { RegisterUserDto } from './dto/register.dto';
@@ -6,8 +15,9 @@ import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import { WINSTON_LOGGER_TOKEN } from 'src/winston/wiston.module';
+import { AuthGuard } from 'src/auth/auth.guard';
 
-@Controller('user')
+@Controller('api/user')
 export class UserController {
   constructor(
     private userService: UserService,
@@ -35,11 +45,16 @@ export class UserController {
         },
       });
       res.setHeader('token', token);
-      this.logger.log('hello', UserController.name);
-      console.log('-------------hello-------------------------');
+      // this.logger.log('hello', UserController.name);
       return 'login success';
     } else {
       return 'login fail';
     }
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('profile')
+  profile(@Request() req) {
+    return req.user;
   }
 }
