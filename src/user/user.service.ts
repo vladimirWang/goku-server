@@ -22,9 +22,11 @@ export class UserService {
   @InjectEntityManager()
   private manager: EntityManager;
 
-  async findOne(username: string): Promise<User | undefined> {
-    // return users.find((user) => user.username === username);
-    return undefined;
+  async findOne(uid: number): Promise<User | undefined> {
+    console.log(this.manager.findBy, uid, '---this.manager.findBy');
+    const found = await this.manager.findOne(User, { where: { id: uid } });
+    return found;
+    // return this.manager.findBy(User, { where: { id: uid } });
   }
 
   async login(user: LoginDto) {

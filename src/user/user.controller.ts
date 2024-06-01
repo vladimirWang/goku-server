@@ -7,6 +7,8 @@ import {
   UseGuards,
   Get,
   Request,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
@@ -16,6 +18,8 @@ import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import { WINSTON_LOGGER_TOKEN } from 'src/winston/wiston.module';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { omit } from 'lodash';
 
 @Controller('api/user')
 export class UserController {
@@ -25,6 +29,18 @@ export class UserController {
     @Inject(WINSTON_LOGGER_TOKEN)
     private logger,
   ) {}
+
+  @Post('upload')
+  @UseInterceptors(
+    FileInterceptor('aaa', {
+      dest: 'uploads',
+    }),
+  )
+  uploadFile(@UploadedFile() file: Express.Multer.File, @Body() body) {
+    console.log('body: ', body);
+    console.log('file: ', file);
+  }
+
   @Post()
   create(@Body() createUserDto: RegisterUserDto) {
     return this.userService.create(createUserDto);
@@ -39,13 +55,10 @@ export class UserController {
 
     if (foundUser) {
       const token = await this.jwtService.signAsync({
-        user: {
-          id: foundUser.id,
-          username: foundUser.username,
-        },
+        id: foundUser.id,
+        username: foundUser.username,
       });
       res.setHeader('token', token);
-      // this.logger.log('hello', UserController.name);
       return 'login success';
     } else {
       return 'login fail';
@@ -54,7 +67,9 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Get('profile')
-  profile(@Request() req) {
-    return req.user;
+  async profile(@Request() req) {
+    const { id } = req.user;
+    const found = await this.userService.findOne(id);
+    return omit(found, 'password');
   }
 }
