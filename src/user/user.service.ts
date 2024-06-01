@@ -61,4 +61,10 @@ export class UserService {
       return '注册失败';
     }
   }
+
+  async patch(user: any, uid: number) {
+    const { username, avatar } = user;
+    console.log(user, '---user');
+    return this.manager.update(User, { id: uid }, { username, avatar });
+  }
 }

@@ -12,7 +12,7 @@ import { secret } from '../constants';
       global: true,
       secret,
       signOptions: {
-        expiresIn: '1m',
+        expiresIn: '1d',
       },
     }),
   ],

@@ -9,6 +9,7 @@ import {
   Request,
   UseInterceptors,
   UploadedFile,
+  Patch,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
@@ -20,6 +21,7 @@ import { WINSTON_LOGGER_TOKEN } from 'src/winston/wiston.module';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { omit } from 'lodash';
+import { storage } from '../util';
 
 @Controller('api/user')
 export class UserController {
@@ -32,13 +34,15 @@ export class UserController {
 
   @Post('upload')
   @UseInterceptors(
-    FileInterceptor('aaa', {
-      dest: 'uploads',
+    FileInterceptor('file', {
+      // dest: 'uploads',
+      storage,
     }),
   )
   uploadFile(@UploadedFile() file: Express.Multer.File, @Body() body) {
-    console.log('body: ', body);
-    console.log('file: ', file);
+    return {
+      url: `/api/static/${file.filename}`,
+    };
   }
 
   @Post()
@@ -71,5 +75,11 @@ export class UserController {
     const { id } = req.user;
     const found = await this.userService.findOne(id);
     return omit(found, 'password');
+  }
+  @UseGuards(AuthGuard)
+  @Patch()
+  patch(@Body() body: any, @Request() req) {
+    const { id } = req.user;
+    return this.userService.patch(body, id);
   }
 }

@@ -31,4 +31,10 @@ export class User {
     comment: '更新时间',
   })
   updateTime: Date;
+
+  @Column({
+    comment: '头像',
+    nullable: true,
+  })
+  avatar: string;
 }
